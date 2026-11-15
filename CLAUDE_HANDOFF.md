@@ -1,6 +1,6 @@
 # Handoff para continuar (Codex ou Claude Code)
 
-Estado em 15/11/2026: calculadora publicada em https://mallucao.github.io/conta-arroba/ com cotação automática. Leia o README antes de editar.
+Estado em 15/11/2026: calculadora publicada em https://mallucao.github.io/conta-arroba/. A atualização automática da cotação depende de uma tarefa agendada no PC de mesa do dono, ainda por instalar (roteiro em `scripts/INSTALAR-NO-PC.md`); até lá a cotação fica no último pregão enviado. Leia o README antes de editar.
 
 ## Decisões a preservar
 
@@ -17,8 +17,8 @@ Estado em 15/11/2026: calculadora publicada em https://mallucao.github.io/conta-
 
 1. `npm test`.
 2. Commit e push na `main`. O workflow `.github/workflows/quote.yml` roda os testes, tenta a busca (hoje recebe 403, então mantém o arquivo enviado) e publica `dist/` no GitHub Pages (`build_type: workflow`).
-3. Atualização da cotação: tarefa agendada no Windows chamando `scripts/atualizar-cotacao.cmd` em dias úteis (18h40, 19h50, 22h20 e 9h15, horário de Brasília). O script usa o `git` e as credenciais já configuradas na máquina. Para registrar em outra máquina, o comando `schtasks` está no README.
-4. Se a data da cotação parar de avançar: conferir se a máquina agendada está ligada, rodar `npm run quote` e `git push` na pasta do projeto, e olhar a aba Actions do repositório.
+3. Atualização da cotação: tarefa agendada do Windows "Conta da arroba - cotacao", registrada por `scripts/instalar.ps1` em um clone fora do Google Drive. Ela chama `scripts/rodar-oculto.vbs`, que roda `scripts/atualizar-cotacao.cmd` sem janela todo dia (18h40 com repetições a cada 70 min até 22h40, e 9h15). O script dá `git pull` antes (a cópia se atualiza sozinha), busca, grava e dá push usando o login do `gh`. O instalador não foi executado por completo no notebook em 15/11 (o classificador do Claude Code barrou registrar tarefa aqui); sintaxe, gatilhos e o lançador oculto foram testados em separado.
+4. Se a data da cotação parar de avançar: conferir se a máquina agendada está ligada, ler `scripts/cotacao.log` nela, rodar `npm run quote` e `git push` na pasta do projeto, e olhar a aba Actions do repositório.
 
 ## Projeto vizinho
 
