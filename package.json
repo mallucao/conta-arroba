@@ -2,8 +2,13 @@
   "name": "conta-arroba",
   "version": "0.1.0",
   "private": true,
-  "description": "Calculadora de kg vivo para celular, com cenários de rendimento de carcaça.",
+  "description": "Calculadora de kg vivo para celular: fechamento do boi gordo na B3 a 52% de rendimento, com oferta recebida.",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "quote": "node server/update-quote.mjs"
+  },
+  "homepage": "https://mallucao.github.io/conta-arroba/",
+  "engines": {
+    "node": ">=20"
   }
 }

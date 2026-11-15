@@ -1,12 +1,13 @@
 {
   "id": "./",
-  "name": "Boi no kg · Compare a oferta",
-  "short_name": "Boi no kg",
+  "name": "Conta da arroba",
+  "short_name": "Arroba",
+  "description": "Último fechamento do boi gordo na B3 em R$/kg vivo a 52% de rendimento.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#101C17",
-  "theme_color": "#101C17",
+  "background_color": "#0B0B0C",
+  "theme_color": "#0B0B0C",
   "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }

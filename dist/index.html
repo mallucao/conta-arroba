@@ -3,88 +3,114 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#101C17">
+  <meta name="theme-color" content="#0B0B0C">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Compare uma oferta por kg vivo com uma referência BGI informada manualmente, em três hipóteses de rendimento.">
+  <meta name="description" content="Converte o último fechamento do boi gordo na B3 em reais por kg vivo a 52% de rendimento e compara com a oferta recebida.">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Boi no kg">
-  <title>Boi no kg · Compare a oferta</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Arroba">
+  <title>Conta da arroba</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="./styles.css">
   <script src="./core.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
-  <main class="calculator">
-    <header class="page-header">
-      <p class="eyebrow">BGI / kg vivo</p>
-      <h1>Compare a oferta</h1>
-      <p class="intro">Uma referência, três hipóteses de rendimento.</p>
+  <main class="app">
+    <header class="top">
+      <p class="eyebrow">Boi gordo · B3</p>
+      <h1>Conta da arroba</h1>
     </header>
 
-    <section class="input-section" aria-label="Valores da comparação">
-      <form id="comparison-form" class="input-grid" novalidate autocomplete="off">
-        <div class="field">
-          <label for="bgi">BGI informado <span class="unit-label">R$/@</span></label>
-          <input id="bgi" name="bgi" type="text" inputmode="decimal" maxlength="80" value="398" spellcheck="false" aria-describedby="bgi-help bgi-error" enterkeyhint="next">
-          <p id="bgi-help" class="field-help">Manual · sem cotação ao vivo.</p>
-          <p id="bgi-error" class="field-error" hidden></p>
-        </div>
-        <div class="field">
-          <label for="ajuste">Ajuste comercial <span class="unit-label">%</span></label>
-          <div class="adjustment-control">
-            <input id="ajuste" name="ajuste" type="text" inputmode="decimal" maxlength="80" value="0" spellcheck="false" aria-describedby="ajuste-help ajuste-error" enterkeyhint="next">
-            <button id="toggle-sign" class="sign-button" type="button" aria-label="Trocar sinal do ajuste comercial">Trocar sinal</button>
-          </div>
-          <p id="ajuste-help" class="field-help">Negativo: desconto. Positivo: ágio.</p>
-          <p id="ajuste-error" class="field-error" hidden></p>
-        </div>
-        <div class="field">
-          <label for="oferta">Oferta recebida <span class="unit-label">R$/kg vivo</span></label>
-          <input id="oferta" name="oferta" type="text" inputmode="decimal" maxlength="80" value="15" spellcheck="false" aria-describedby="oferta-help oferta-error" enterkeyhint="done">
-          <p id="oferta-help" class="field-help">Aceita vírgula ou ponto decimal.</p>
-          <p id="oferta-error" class="field-error" hidden></p>
-        </div>
-      </form>
-      <p id="validation-message" class="validation-message" role="alert" hidden></p>
+    <section class="card" aria-labelledby="quote-heading">
+      <div class="card-head">
+        <h2 id="quote-heading">Arroba <span class="unit">R$/@</span></h2>
+        <button id="refresh" class="ghost" type="button">Atualizar</button>
+      </div>
+      <div class="stepper">
+        <button class="step" type="button" data-step="bgi" data-dir="-1" aria-label="Arroba: menos 1 real">−</button>
+        <input id="bgi" name="bgi" type="text" inputmode="decimal" maxlength="80" placeholder="R$/@" spellcheck="false" autocomplete="off" aria-label="Arroba em reais" aria-describedby="bgi-error quote-line-1 quote-line-2" enterkeyhint="done">
+        <button class="step" type="button" data-step="bgi" data-dir="1" aria-label="Arroba: mais 1 real">+</button>
+      </div>
+      <p id="bgi-error" class="field-error" hidden></p>
+      <div id="bgi-mode" class="mode-row" hidden>
+        <span class="tag">Valor manual</span>
+        <button id="use-quote" class="link" type="button">Usar cotação <span id="use-quote-price"></span></button>
+      </div>
+      <div id="contracts" class="chips" role="group" aria-label="Vencimento do contrato"></div>
+      <div id="quote-status" class="status" data-tone="neutral">
+        <p id="quote-line-1" class="status-main">Buscando a cotação…</p>
+        <p id="quote-line-2" class="status-sub"></p>
+        <p id="quote-line-3" class="status-sub"></p>
+      </div>
     </section>
 
-    <section class="results-section" aria-labelledby="results-heading">
-      <div class="results-heading">
-        <h2 id="results-heading">Por rendimento</h2>
-        <p>Simulação · ajuste não calibrado</p>
-      </div>
-      <div class="yield-list">
-        <article class="yield-band" aria-labelledby="yield-50">
-          <div class="yield-rail"><h3 id="yield-50">50<span>%</span></h3><span class="rail-label">hipótese</span></div>
-          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-50">—</output><span>/kg</span></p><p id="difference-50" class="difference">—</p></div>
-        </article>
-        <article class="yield-band" aria-labelledby="yield-52">
-          <div class="yield-rail"><h3 id="yield-52">52<span>%</span></h3><span class="rail-label">hipótese</span></div>
-          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-52">—</output><span>/kg</span></p><p id="difference-52" class="difference">—</p></div>
-        </article>
-        <article class="yield-band" aria-labelledby="yield-55">
-          <div class="yield-rail"><h3 id="yield-55">55<span>%</span></h3><span class="rail-label">hipótese</span></div>
-          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-55">—</output><span>/kg</span></p><p id="difference-55" class="difference">—</p></div>
-        </article>
-      </div>
-      <p id="result-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+    <section id="hero" class="hero" aria-labelledby="hero-heading" data-empty="true">
+      <p id="hero-heading" class="hero-label">Equivalente a <strong>52%</strong> de rendimento</p>
+      <p class="hero-price"><span class="hero-currency">R$</span><output id="price-52" for="bgi ajuste">—</output><span class="hero-unit">por kg vivo</span></p>
+      <p id="calc-52" class="hero-calc"></p>
     </section>
+
+    <section class="card" aria-labelledby="offer-heading">
+      <div class="card-head">
+        <h2 id="offer-heading">Oferta recebida <span class="unit">R$/kg vivo</span></h2>
+      </div>
+      <div class="stepper">
+        <button class="step" type="button" data-step="oferta" data-dir="-1" aria-label="Oferta: menos 10 centavos">−</button>
+        <input id="oferta" name="oferta" type="text" inputmode="decimal" maxlength="80" placeholder="R$/kg" spellcheck="false" autocomplete="off" aria-label="Oferta recebida por kg vivo" aria-describedby="oferta-error oferta-help compare" enterkeyhint="done">
+        <button class="step" type="button" data-step="oferta" data-dir="1" aria-label="Oferta: mais 10 centavos">+</button>
+      </div>
+      <p id="oferta-error" class="field-error" hidden></p>
+      <p id="compare" class="compare" data-tone="neutral"></p>
+      <p id="oferta-help" class="hint">Opcional. Aceita vírgula ou ponto nos decimais.</p>
+    </section>
+
+    <details id="adjust-details" class="card details">
+      <summary><span>Ajuste comercial</span><span id="adjust-summary" class="unit">0%</span></summary>
+      <div class="details-body">
+        <div class="stepper">
+          <button class="step" type="button" data-step="ajuste" data-dir="-1" aria-label="Ajuste: menos 1 ponto percentual">−</button>
+          <input id="ajuste" name="ajuste" type="text" inputmode="decimal" maxlength="80" value="0" spellcheck="false" autocomplete="off" aria-label="Ajuste comercial em por cento" aria-describedby="ajuste-error ajuste-help" enterkeyhint="done">
+          <button class="step" type="button" data-step="ajuste" data-dir="1" aria-label="Ajuste: mais 1 ponto percentual">+</button>
+        </div>
+        <p id="ajuste-error" class="field-error" hidden></p>
+        <p id="ajuste-help" class="hint">Negativo: desconto sobre o equivalente. Positivo: ágio. <button id="toggle-sign" class="link" type="button">Inverter sinal</button></p>
+      </div>
+    </details>
+
+    <details class="card details">
+      <summary><span>Outras hipóteses</span><span class="unit">50% e 55%</span></summary>
+      <div class="details-body other-list">
+        <div class="other-row">
+          <span class="other-yield">50%</span>
+          <span class="other-price">R$ <output id="price-50" for="bgi ajuste">—</output></span>
+          <span id="difference-50" class="other-diff" data-tone="neutral"></span>
+        </div>
+        <div class="other-row">
+          <span class="other-yield">55%</span>
+          <span class="other-price">R$ <output id="price-55" for="bgi ajuste">—</output></span>
+          <span id="difference-55" class="other-diff" data-tone="neutral"></span>
+        </div>
+      </div>
+    </details>
 
     <details class="help">
       <summary>Como funciona</summary>
       <div class="help-content">
-        <p>O equivalente em reais por kg vivo usa esta conta:</p>
-        <p class="formula">BGI × rendimento (%) ÷ 1500 × (1 + ajuste ÷ 100)</p>
-        <p>O ajuste é um cenário comercial: <strong>−5%</strong> reduz o equivalente em 5%; <strong>+5%</strong> aumenta em 5%. Ele não foi calibrado com negócios da sua região.</p>
-        <p>Os rendimentos de 50%, 52% e 55% são hipóteses. A raça não garante o rendimento real de carcaça.</p>
-        <p>A diferença é <span class="formula-inline">(oferta ÷ equivalente − 1) × 100</span>. “Acima” e “abaixo” comparam preços; não representam lucro nem recomendação de venda.</p>
-        <p>Todos os valores são informados por você. Não há busca de cotação ao vivo. Use vírgula ou ponto para decimais, sem separador de milhar.</p>
+        <p><strong>A conta.</strong> Equivalente por kg vivo = arroba × rendimento ÷ 15 kg. Com 402,10 e 52%: 402,10 × 0,52 ÷ 15 = 13,94. O ajuste comercial, quando usado, multiplica esse valor por (1 + ajuste ÷ 100).</p>
+        <p class="formula">arroba × 52% ÷ 15 × (1 + ajuste ÷ 100)</p>
+        <p><strong>Rendimento.</strong> 52% é a hipótese principal; 50% e 55% ficam em “Outras hipóteses”. O rendimento real de carcaça depende do animal, não da raça nem do preço.</p>
+        <p><strong>Cotação.</strong> É o último fechamento publicado do boi gordo na B3 (pregão regular), lido da tabela pública do Notícias Agrícolas. O app começa pelo vencimento mais próximo publicado (primeiro mês igual ou posterior ao do pregão); toque em outro mês para trocar. Não é cotação em tempo real. O TradingView pode mostrar o último negócio ou o ajuste, que costumam variar alguns centavos em relação a esse fechamento.</p>
+        <p><strong>Atualização.</strong> A cotação é renovada automaticamente em dias úteis por volta de 18h40, 19h50 e 22h20, com uma conferência às 9h15 (horário de Brasília). Ao abrir, o app busca o arquivo mais novo; sem internet, usa o último guardado no aparelho e mostra a data.</p>
+        <p><strong>Oferta.</strong> A diferença compara a oferta recebida com o equivalente. “Acima” e “abaixo” comparam preços; não indicam lucro nem recomendação de venda.</p>
+        <p>Pode digitar a arroba por conta própria a qualquer momento; “Usar cotação” volta ao valor publicado.</p>
       </div>
     </details>
-    <noscript><p class="noscript-message">Ative o JavaScript do navegador para calcular a comparação.</p></noscript>
+
+    <p id="result-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+    <noscript><p class="hint">Ative o JavaScript do navegador para calcular.</p></noscript>
   </main>
 </body>
 </html>

@@ -1,0 +1,59 @@
+name: Cotação diária e site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Horário de Brasília = UTC−3 (sem horário de verão). Dias úteis: 18h40, 19h50, 22h20 e 09h15.
+    - cron: '40 21 * * 1-5'
+    - cron: '50 22 * * 1-5'
+    - cron: '20 1 * * 2-6'
+    - cron: '15 12 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: cotacao-e-site
+  cancel-in-progress: false
+
+jobs:
+  cotacao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Testes
+        run: npm test
+      - name: Buscar o último fechamento publicado
+        id: quote
+        run: node server/update-quote.mjs
+      - name: Gravar a cotação no repositório
+        if: steps.quote.outputs.changed == 'true'
+        env:
+          SUMMARY: ${{ steps.quote.outputs.summary }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/quote.json
+          git commit -m "Cotação: $SUMMARY"
+          git push || (git pull --rebase && git push)
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    needs: cotacao
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
