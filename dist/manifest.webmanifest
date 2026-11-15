@@ -1,0 +1,12 @@
+{
+  "id": "./",
+  "name": "Boi no kg · Compare a oferta",
+  "short_name": "Boi no kg",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101C17",
+  "theme_color": "#101C17",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

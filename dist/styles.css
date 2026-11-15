@@ -1,0 +1,103 @@
+:root {
+  color-scheme: dark;
+  --paper: #101C17;
+  --pine: #AFCBB4;
+  --ink: #EDF3ED;
+  --steel: #ACBAB0;
+  --amber: #DDB36B;
+  --surface: #182A22;
+  --line: #375044;
+  --body: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --data: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, summary { -webkit-tap-highlight-color: transparent; }
+p, h1, h2, h3 { margin: 0; }
+
+.calculator {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+.page-header { margin-bottom: 28px; }
+.eyebrow { font-family: var(--data); font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--steel); }
+h1 { font: 400 32px/1.15 Georgia, "Times New Roman", serif; margin-top: 8px; letter-spacing: -.025em; }
+.intro { font-size: 15px; line-height: 1.5; margin-top: 8px; color: var(--steel); }
+.input-grid { display: grid; gap: 20px; }
+.field { min-width: 0; }
+.field label { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 15px; line-height: 1.4; font-weight: 600; margin-bottom: 7px; }
+.unit-label { font-size: 12px; font-weight: 400; color: var(--steel); white-space: nowrap; }
+.field input {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  border: 1px solid var(--steel);
+  border-radius: 6px;
+  padding: 11px 13px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--data);
+  font-size: 18px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.field input[aria-invalid="true"] { border: 2px solid var(--amber); padding: 10px 12px; }
+.adjustment-control { display: flex; gap: 8px; }
+.adjustment-control input { min-width: 0; flex: 1; }
+.sign-button { min-width: 76px; min-height: 52px; padding: 8px 10px; border: 1px solid var(--pine); border-radius: 6px; background: var(--paper); color: var(--pine); font: 600 12px/1.3 var(--body); cursor: pointer; }
+.sign-button:active { background: var(--pine); color: var(--paper); }
+:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+.field-help { margin-top: 6px; font-size: 12px; line-height: 1.5; color: var(--steel); }
+.field-error { margin-top: 6px; font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--ink); }
+.validation-message { margin-top: 14px; padding-left: 10px; border-left: 3px solid var(--amber); font-size: 14px; line-height: 1.5; }
+
+.results-section { margin-top: 32px; }
+.results-heading { margin-bottom: 13px; }
+h2 { font-size: 18px; font-weight: 600; line-height: 1.4; }
+.results-heading p { font-size: 12px; line-height: 1.5; color: var(--steel); margin-top: 3px; }
+.yield-list { display: grid; gap: 10px; }
+.yield-band { display: grid; grid-template-columns: 84px minmax(0, 1fr); background: var(--surface); border-radius: 7px; overflow: hidden; }
+.yield-rail { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; background: var(--pine); color: var(--paper); padding: 16px 6px; }
+.yield-rail h3 { font-family: var(--data); font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.yield-rail h3 span { font-size: 17px; letter-spacing: -.04em; }
+.rail-label { font-size: 11px; line-height: 1.4; }
+.yield-result { min-width: 0; padding: 14px 14px 15px; }
+.result-label { color: var(--steel); font-size: 12px; line-height: 1.5; }
+.price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px; margin-top: 2px; }
+.price output { font-family: var(--data); font-size: 24px; font-weight: 500; line-height: 1.4; letter-spacing: -.045em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.price > span { font-size: 13px; line-height: 1.4; color: var(--steel); }
+.difference { margin-top: 5px; font-size: 13px; font-weight: 600; line-height: 1.5; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+
+.help { margin-top: 24px; border-top: 1px solid var(--line); }
+.help summary { min-height: 52px; padding: 15px 0; font-size: 15px; line-height: 1.5; font-weight: 600; cursor: pointer; }
+.help-content { display: grid; gap: 12px; padding: 0 0 8px; font-size: 14px; line-height: 1.65; }
+.formula { padding: 12px; background: var(--surface); font-family: var(--data); font-size: 13px; overflow-wrap: anywhere; }
+.formula-inline { font-family: var(--data); font-size: 12px; }
+.noscript-message { margin-top: 16px; font-size: 14px; line-height: 1.5; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+
+@media (min-width: 640px) {
+  .calculator { padding-top: 40px; }
+  .page-header { margin-bottom: 32px; }
+  h1 { font-size: 38px; }
+  .input-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .field label { flex-wrap: wrap; gap: 2px 8px; }
+  .yield-band { grid-template-columns: 112px minmax(0, 1fr); }
+  .yield-rail h3 { font-size: 36px; }
+  .yield-result { padding: 17px 22px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 0 16px; }
+  .result-label { grid-column: 1; }
+  .price { grid-column: 1; }
+  .difference { grid-column: 2; grid-row: 1 / 3; font-size: 14px; margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }

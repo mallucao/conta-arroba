@@ -1,0 +1,9 @@
+{
+  "name": "conta-arroba",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Calculadora de kg vivo para celular, com cenários de rendimento de carcaça.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

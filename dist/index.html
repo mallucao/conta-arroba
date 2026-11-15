@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101C17">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Compare uma oferta por kg vivo com uma referência BGI informada manualmente, em três hipóteses de rendimento.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Boi no kg">
+  <title>Boi no kg · Compare a oferta</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./core.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main class="calculator">
+    <header class="page-header">
+      <p class="eyebrow">BGI / kg vivo</p>
+      <h1>Compare a oferta</h1>
+      <p class="intro">Uma referência, três hipóteses de rendimento.</p>
+    </header>
+
+    <section class="input-section" aria-label="Valores da comparação">
+      <form id="comparison-form" class="input-grid" novalidate autocomplete="off">
+        <div class="field">
+          <label for="bgi">BGI informado <span class="unit-label">R$/@</span></label>
+          <input id="bgi" name="bgi" type="text" inputmode="decimal" maxlength="80" value="398" spellcheck="false" aria-describedby="bgi-help bgi-error" enterkeyhint="next">
+          <p id="bgi-help" class="field-help">Manual · sem cotação ao vivo.</p>
+          <p id="bgi-error" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="ajuste">Ajuste comercial <span class="unit-label">%</span></label>
+          <div class="adjustment-control">
+            <input id="ajuste" name="ajuste" type="text" inputmode="decimal" maxlength="80" value="0" spellcheck="false" aria-describedby="ajuste-help ajuste-error" enterkeyhint="next">
+            <button id="toggle-sign" class="sign-button" type="button" aria-label="Trocar sinal do ajuste comercial">Trocar sinal</button>
+          </div>
+          <p id="ajuste-help" class="field-help">Negativo: desconto. Positivo: ágio.</p>
+          <p id="ajuste-error" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label for="oferta">Oferta recebida <span class="unit-label">R$/kg vivo</span></label>
+          <input id="oferta" name="oferta" type="text" inputmode="decimal" maxlength="80" value="15" spellcheck="false" aria-describedby="oferta-help oferta-error" enterkeyhint="done">
+          <p id="oferta-help" class="field-help">Aceita vírgula ou ponto decimal.</p>
+          <p id="oferta-error" class="field-error" hidden></p>
+        </div>
+      </form>
+      <p id="validation-message" class="validation-message" role="alert" hidden></p>
+    </section>
+
+    <section class="results-section" aria-labelledby="results-heading">
+      <div class="results-heading">
+        <h2 id="results-heading">Por rendimento</h2>
+        <p>Simulação · ajuste não calibrado</p>
+      </div>
+      <div class="yield-list">
+        <article class="yield-band" aria-labelledby="yield-50">
+          <div class="yield-rail"><h3 id="yield-50">50<span>%</span></h3><span class="rail-label">hipótese</span></div>
+          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-50">—</output><span>/kg</span></p><p id="difference-50" class="difference">—</p></div>
+        </article>
+        <article class="yield-band" aria-labelledby="yield-52">
+          <div class="yield-rail"><h3 id="yield-52">52<span>%</span></h3><span class="rail-label">hipótese</span></div>
+          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-52">—</output><span>/kg</span></p><p id="difference-52" class="difference">—</p></div>
+        </article>
+        <article class="yield-band" aria-labelledby="yield-55">
+          <div class="yield-rail"><h3 id="yield-55">55<span>%</span></h3><span class="rail-label">hipótese</span></div>
+          <div class="yield-result"><p class="result-label">Equivalente ajustado</p><p class="price"><output id="price-55">—</output><span>/kg</span></p><p id="difference-55" class="difference">—</p></div>
+        </article>
+      </div>
+      <p id="result-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+
+    <details class="help">
+      <summary>Como funciona</summary>
+      <div class="help-content">
+        <p>O equivalente em reais por kg vivo usa esta conta:</p>
+        <p class="formula">BGI × rendimento (%) ÷ 1500 × (1 + ajuste ÷ 100)</p>
+        <p>O ajuste é um cenário comercial: <strong>−5%</strong> reduz o equivalente em 5%; <strong>+5%</strong> aumenta em 5%. Ele não foi calibrado com negócios da sua região.</p>
+        <p>Os rendimentos de 50%, 52% e 55% são hipóteses. A raça não garante o rendimento real de carcaça.</p>
+        <p>A diferença é <span class="formula-inline">(oferta ÷ equivalente − 1) × 100</span>. “Acima” e “abaixo” comparam preços; não representam lucro nem recomendação de venda.</p>
+        <p>Todos os valores são informados por você. Não há busca de cotação ao vivo. Use vírgula ou ponto para decimais, sem separador de milhar.</p>
+      </div>
+    </details>
+    <noscript><p class="noscript-message">Ative o JavaScript do navegador para calcular a comparação.</p></noscript>
+  </main>
+</body>
+</html>
