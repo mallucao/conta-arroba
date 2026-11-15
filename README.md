@@ -29,8 +29,8 @@ A diferença é `(oferta ÷ equivalente − 1) × 100`. "Acima" e "abaixo" compa
 - O app mostra data do pregão, contrato/vencimento, tipo de preço, fonte com link e horário da coleta.
 - Vencimento padrão: o primeiro mês publicado igual ou posterior ao mês do pregão. Linhas com mês inválido (como `GO RD`) são ignoradas.
 - Não é cotação em tempo real nem reprodução do `BGI1!` do TradingView, que pode mostrar o último negócio ou o ajuste. Em 13/11/2026, por exemplo, a fonte trazia 402,10 e o TradingView 402,15 para Novembro/2026.
-- Atualização automática pelo GitHub Actions em dias úteis às 18h40, 19h50 e 22h20, com conferência às 9h15 (horário de Brasília). O arquivo `dist/quote.json` só muda quando há pregão novo ou preço diferente; se a fonte falhar, o último dado válido é mantido com a sua data e o app avisa quando pode haver pregão mais recente.
-- Limite conhecido: o GitHub pausa agendamentos de repositório público sem atividade por 60 dias. Se a data parar de avançar, abra a aba Actions do repositório e reative o workflow, ou rode "Run workflow" manualmente.
+- Atualização automática: o Notícias Agrícolas responde HTTP 403 a pedidos vindos dos servidores do GitHub, então a busca roda no computador do dono do projeto. O Agendador de Tarefas do Windows chama `scripts/atualizar-cotacao.cmd` em dias úteis às 18h40, 19h50 e 22h20, com conferência às 9h15 (horário de Brasília). O script grava `dist/quote.json` só quando há pregão novo ou preço diferente e envia o commit; o GitHub Actions então publica o site. Se a fonte falhar, o último dado válido é mantido com a sua data e o app avisa quando pode haver pregão mais recente.
+- Se a data parar de avançar: conferir se o computador agendado está ligado e, na pasta do projeto, rodar `npm run quote` e depois `git push`.
 
 ## Desenvolvimento
 
@@ -46,5 +46,17 @@ Estrutura:
 
 - `dist/` site estático publicado (HTML, CSS, `core.js` com o cálculo, `app.js` com a tela, `sw.js` para uso sem internet, `quote.json`).
 - `server/quotes.mjs` leitor e validador da fonte; `server/update-quote.mjs` grava o arquivo.
+- `scripts/atualizar-cotacao.cmd` busca a cotação e envia o commit (para o Agendador de Tarefas do Windows).
 - `tests/` testes com fixture factual da fonte.
-- `.github/workflows/quote.yml` agendamento e publicação no GitHub Pages.
+- `.github/workflows/quote.yml` testes e publicação no GitHub Pages a cada push.
+
+### Agendar a atualização no Windows
+
+Na máquina que fica ligada, com Node.js, Git e o acesso ao GitHub já configurados, abra o Prompt de Comando na pasta do projeto e registre duas tarefas (troque `C:\caminho\conta-arroba` pela pasta real). A primeira roda às 18h40 e repete a cada 70 minutos por 4 horas; a segunda confere às 9h15. Nos fins de semana o script só constata que não há pregão novo.
+
+```
+schtasks /Create /F /TN "Conta da arroba - noite" /SC DAILY /ST 18:40 /RI 70 /DU 04:00 /TR "cmd /c \"C:\caminho\conta-arroba\scripts\atualizar-cotacao.cmd >> C:\caminho\conta-arroba\scripts\cotacao.log 2>&1\""
+schtasks /Create /F /TN "Conta da arroba - manha" /SC DAILY /ST 09:15 /TR "cmd /c \"C:\caminho\conta-arroba\scripts\atualizar-cotacao.cmd >> C:\caminho\conta-arroba\scripts\cotacao.log 2>&1\""
+```
+
+Para testar na hora: `schtasks /Run /TN "Conta da arroba - noite"` e depois ler `scripts\cotacao.log`.

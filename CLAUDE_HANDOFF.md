@@ -9,16 +9,16 @@ Estado em 15/11/2026: calculadora publicada em https://mallucao.github.io/conta-
 - Botões − e + por unidade: arroba R$ 1, oferta R$ 0,10, ajuste 1 ponto. Mexer na arroba vira "Valor manual" com botão "Usar cotação".
 - Oferta recebida é opcional; a comparação nunca é chamada de lucro nem vira recomendação de venda.
 - Sem valor de exemplo em lugar nenhum: a arroba começa vazia até a cotação chegar ou o usuário digitar.
-- Cotação: só o widget público do Notícias Agrícolas, lido no servidor (GitHub Actions). A página oficial da B3 proíbe coleta automatizada; use B3 e TradingView apenas para conferência manual. Não trocar futuro por indicador físico sem avisar.
+- Cotação: só o widget público do Notícias Agrícolas, lido fora do navegador. A fonte responde HTTP 403 aos servidores do GitHub (testado em 15/11/2026); não tentar disfarçar os pedidos. A busca agendada roda no computador do dono via `scripts/atualizar-cotacao.cmd`, que envia `dist/quote.json`; o GitHub só publica. A página oficial da B3 proíbe coleta automatizada; use B3 e TradingView apenas para conferência manual. Não trocar futuro por indicador físico sem avisar.
 - O app valida o arquivo de cotação (`validateQuote` em `dist/core.js`): data no formato ISO e não futura pelo calendário de São Paulo, preço positivo, contrato `BGI` com código de mês válido, preço principal igual ao do contrato selecionado.
 - `server/update-quote.mjs` nunca substitui por pregão mais antigo e mantém o arquivo anterior se a fonte falhar.
 
 ## Fluxo de publicação
 
 1. `npm test`.
-2. Commit e push na `main`. O workflow `.github/workflows/quote.yml` roda os testes, busca a cotação, grava `dist/quote.json` se mudou e publica `dist/` no GitHub Pages (`build_type: workflow`).
-3. Rodadas agendadas em dias úteis (UTC): 21h40, 22h50, 01h20 e 12h15. Rodada manual: aba Actions, "Run workflow".
-4. Conferir o site no celular e a aba Actions se a data da cotação parar de avançar (o GitHub pausa agendamentos após 60 dias sem atividade em repositório público).
+2. Commit e push na `main`. O workflow `.github/workflows/quote.yml` roda os testes, tenta a busca (hoje recebe 403, então mantém o arquivo enviado) e publica `dist/` no GitHub Pages (`build_type: workflow`).
+3. Atualização da cotação: tarefa agendada no Windows chamando `scripts/atualizar-cotacao.cmd` em dias úteis (18h40, 19h50, 22h20 e 9h15, horário de Brasília). O script usa o `git` e as credenciais já configuradas na máquina. Para registrar em outra máquina, o comando `schtasks` está no README.
+4. Se a data da cotação parar de avançar: conferir se a máquina agendada está ligada, rodar `npm run quote` e `git push` na pasta do projeto, e olhar a aba Actions do repositório.
 
 ## Projeto vizinho
 

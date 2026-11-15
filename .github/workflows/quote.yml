@@ -1,14 +1,11 @@
-name: Cotação diária e site
+name: Cotação e site
 
+# A fonte responde HTTP 403 aos servidores do GitHub, por isso a busca agendada roda no computador
+# do dono do projeto (scripts/atualizar-cotacao.cmd) e envia dist/quote.json. Aqui a busca é só uma
+# tentativa extra: se falhar, o arquivo enviado é mantido e o site é publicado do mesmo jeito.
 on:
   push:
     branches: [main]
-  schedule:
-    # Horário de Brasília = UTC−3 (sem horário de verão). Dias úteis: 18h40, 19h50, 22h20 e 09h15.
-    - cron: '40 21 * * 1-5'
-    - cron: '50 22 * * 1-5'
-    - cron: '20 1 * * 2-6'
-    - cron: '15 12 * * 1-5'
   workflow_dispatch:
 
 permissions:
